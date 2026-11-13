@@ -1,5 +1,7 @@
 # 终端锦囊 · CheatDeck
 
+**在线访问：https://linuxhobby.github.io/CheatDeck/**
+
 一组命令速查单页（Cheat Sheet），覆盖 Hermes Agent、Tailscale、Proxmox VE、VPS 部署四个场景。标签页切换，随时速查。
 
 纯原生 HTML/CSS/JS，零外部依赖，离线可用。
