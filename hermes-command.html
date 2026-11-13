@@ -4,57 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hermes Agent 指令速查</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f6f8fa; color: #1f2328; padding: 1.5rem 1rem; line-height: 1.5; }
-  .container { max-width: 920px; margin: 0 auto; }
-  h1 { font-size: 26px; font-weight: 600; margin-bottom: 0.25rem; }
-  .subtitle { font-size: 15px; color: #656d76; margin-bottom: 1rem; }
-  .search-bar { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 12px; margin-bottom: 1.25rem; }
-  .search-bar input { border: none; outline: none; font-size: 15px; color: #1f2328; width: 100%; background: transparent; font-family: 'SFMono-Regular', Consolas, ui-monospace, monospace; }
-  .search-bar input::placeholder { color: #8c959f; }
-  .section { margin-bottom: 1.35rem; }
-  .section-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #656d76; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 5px; }
-  .cmd-card { display: flex; align-items: flex-start; gap: 9px; background: #fff; border: 1px solid #d0d7de; border-radius: 7px; padding: 8px 10px; transition: all 0.12s; cursor: default; }
-  .cmd-card:hover { border-color: #0969da; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
-  .cmd-card:active { transform: translateY(0.5px); }
-  .cmd-name { font-size: 13px; font-weight: 600; color: #0969da; font-family: 'SFMono-Regular', Consolas, ui-monospace, monospace; min-width: 138px; max-width: 220px; flex-shrink: 0; padding-top: 1px; word-break: break-all; }
-  .cmd-name.clickable { cursor: pointer; user-select: all; }
-  .cmd-name.clickable:hover { text-decoration: underline; }
-  .cmd-desc { font-size: 13.5px; color: #656d76; line-height: 1.35; flex: 1; }
-  .no-result { font-size: 14px; color: #8c959f; padding: 1rem 0; }
-  .note { font-size: 12px; color: #8c959f; margin-top: 4px; }
-  .info-box { background: #fff; border: 1px solid #d0d7de; border-left: 3px solid #0969da; border-radius: 7px; padding: 10px 14px; }
-  .info-item { display: flex; gap: 10px; font-size: 13px; padding: 3px 0; align-items: flex-start; }
-  .info-item .info-label { font-weight: 600; color: #1f2328; min-width: 78px; flex-shrink: 0; font-family: 'SFMono-Regular', Consolas, ui-monospace, monospace; font-size: 12.5px; }
-  .info-item .info-text { color: #656d76; flex: 1; line-height: 1.4; }
-  .copy-toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #1f2328; color: #fff; padding: 6px 14px; border-radius: 999px; font-size: 13px; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 9999; }
-  .copy-toast.show { opacity: 1; }
-  footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #d0d7de; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 0.6rem; font-size: 12px; color: #656d76; }
-  footer a { color: #0969da; text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  .footer-left { display: flex; flex-direction: column; gap: 3px; }
-  .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-  .legend { font-size: 11px; color: #8c959f; margin-bottom: 0.6rem; }
-  .legend span { display: inline-block; background: #fff; border: 1px solid #d0d7de; border-radius: 4px; padding: 1px 5px; margin-right: 4px; font-family: monospace; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #0d1117; color: #e6edf3; }
-    .search-bar, .cmd-card { background: #161b22; border-color: #30363d; }
-    .cmd-card:hover { border-color: #58a6ff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-    .cmd-name { color: #58a6ff; }
-    .cmd-desc, .subtitle, .note, .legend { color: #8b949e; }
-    .section-title { color: #8b949e; }
-    .search-bar input { color: #e6edf3; }
-    .search-bar input::placeholder { color: #484f58; }
-    .info-box { background: #161b22; border-color: #30363d; border-left-color: #58a6ff; }
-    .info-item .info-label { color: #e6edf3; }
-    .info-item .info-text { color: #8b949e; }
-    footer { border-top-color: #30363d; }
-    footer a { color: #58a6ff; }
-    .copy-toast { background: #30363d; }
-  }
-</style>
+<link rel="stylesheet" href="assets/shared.css" />
 </head>
 <body>
 <div class="container">
@@ -66,18 +16,18 @@
     <input type="text" placeholder="搜索命令或描述（例如 model、sessions、/help）..." id="search" oninput="filter()" />
   </div>
 
-  <div class="legend">💡 提示：点击蓝色命令即可复制。CLI 命令推荐加入 shell alias；斜杠命令在对话中输入。按 <span>/</span> 聚焦搜索框。</div>
+  <div class="legend">💡 提示：点击命令卡片即可复制。CLI 命令推荐加入 shell alias；斜杠命令在对话中输入。按 <span>/</span> 聚焦搜索框。</div>
 
   <div id="content"></div>
 
   <footer>
     <div class="footer-left">
-      <span>© 2026 · 基于本地安装与官方指南整理</span>
-      <span>最后更新：2026 年 7 月</span>
+      <span>© 2026 <a href="https://github.com/linuxhobby" target="_blank">LINUXHOBBY</a></span>
+      <span>最后更新：2026 年 11 月</span>
     </div>
     <div class="footer-right">
-      <span><a href="https://github.com/NousResearch/hermes-agent" target="_blank">官方 GitHub</a> · <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">官方文档</a></span>
-      <span><a href="https://github.com/community-scripts/ProxmoxVE" target="_blank">参考样式：ProxmoxVE tailscale-command.html</a></span>
+      <span><a href="https://github.com/linuxhobby/ProxmoxVEDocumentation" target="_blank">GitHub 仓库</a></span>
+      <span><a href="https://github.com/NousResearch/hermes-agent" target="_blank">Hermes Agent 官方 GitHub</a> · <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">官方文档</a></span>
     </div>
   </footer>
 </div>
@@ -323,99 +273,7 @@ const data = [
     { label: "说明", desc: "上述列表未逐一列出动态命令，取决于你具体安装了什么以及如何配置" },
   ]},
 ];
-
-function copyToClipboard(text, el) {
-  navigator.clipboard.writeText(text).then(() => {
-    const toast = document.getElementById('toast');
-    toast.textContent = '已复制：' + text;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1600);
-  }).catch(() => {
-    // fallback
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    const toast = document.getElementById('toast');
-    toast.textContent = '已复制';
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 1400);
-  });
-}
-
-function render(q) {
-  const container = document.getElementById('content');
-  q = (q || '').toLowerCase().trim();
-  let html = '';
-  let any = false;
-
-  data.forEach(section => {
-    const items = q
-      ? section.items.filter(i =>
-          (i.cmd || i.label || '').toLowerCase().includes(q) ||
-          (i.desc || '').toLowerCase().includes(q)
-        )
-      : section.items;
-    if (!items.length) return;
-    any = true;
-
-    // 信息块（标签说明 / 动态路由）
-    if (section.type === 'info') {
-      html += `<div class="section"><div class="section-title">${section.cat}</div><div class="info-box">`;
-      items.forEach(i => {
-        html += `<div class="info-item"><span class="info-label">${i.label || ''}</span><span class="info-text">${i.desc}</span></div>`;
-      });
-      html += `</div></div>`;
-      return;
-    }
-
-    // 普通命令卡片
-    html += `<div class="section"><div class="section-title">${section.cat}</div><div class="cmd-grid">`;
-    items.forEach(i => {
-      const displayCmd = i.cmd;
-      html += `<div class="cmd-card" title="点击命令复制">
-        <span class="cmd-name clickable" data-cmd="${displayCmd.replace(/"/g, '&quot;')}">${displayCmd}</span>
-        <span class="cmd-desc">${i.desc}</span>
-      </div>`;
-    });
-    html += `</div></div>`;
-  });
-
-  if (!any) html = `<div class="no-result">未找到匹配的命令或描述</div>`;
-  container.innerHTML = html;
-
-  // bind click copy
-  container.querySelectorAll('.cmd-name.clickable').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.stopImmediatePropagation();
-      const cmd = el.getAttribute('data-cmd');
-      copyToClipboard(cmd, el);
-    });
-  });
-}
-
-function filter() {
-  render(document.getElementById('search').value);
-}
-
-render('');
-
-// Keyboard: press / to focus search (like many CLIs)
-document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && document.activeElement.tagName === 'BODY') {
-    e.preventDefault();
-    document.getElementById('search').focus();
-    document.getElementById('search').select();
-  }
-  if (e.key === 'Escape' && document.activeElement.id === 'search') {
-    document.getElementById('search').blur();
-  }
-});
-
-// Bonus: show a small tip on load in console (harmless)
-console.log('%c[Hermes Command] 按 / 键可快速聚焦搜索框。所有蓝色命令可点击复制。', 'color:#8b949e;font-size:10px');
 </script>
+<script src="assets/shared.js"></script>
 </body>
 </html>

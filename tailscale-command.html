@@ -4,41 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Tailscale CLI Reference</title>
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f6f8fa; color: #1f2328; padding: 2rem 1rem; }
-  .container { max-width: 860px; margin: 0 auto; }
-  h1 { font-size: 24px; font-weight: 600; margin-bottom: 0.25rem; }
-  .subtitle { font-size: 16px; color: #656d76; margin-bottom: 1.5rem; }
-  .search-bar { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 8px 12px; margin-bottom: 1.5rem; }
-  .search-bar input { border: none; outline: none; font-size: 16px; color: #1f2328; width: 100%; background: transparent; font-family: 'SFMono-Regular', Consolas, monospace; }
-  .search-bar input::placeholder { color: #8c959f; }
-  .section { margin-bottom: 1.5rem; }
-  .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #656d76; margin-bottom: 8px; }
-  .cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 6px; }
-  .cmd-card { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 1px solid #d0d7de; border-radius: 8px; padding: 10px 12px; transition: border-color 0.15s; }
-  .cmd-card:hover { border-color: #0969da; }
-  .cmd-name { font-size: 16px; font-weight: 600; color: #0969da; font-family: 'SFMono-Regular', Consolas, monospace; min-width: 76px; flex-shrink: 0; padding-top: 1px; }
-  .cmd-desc { font-size: 15px; color: #656d76; line-height: 1.4; }
-  .no-result { font-size: 14px; color: #8c959f; padding: 1rem 0; }
-  footer { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid #d0d7de; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 0.75rem; font-size: 13px; color: #656d76; }
-  footer a { color: #0969da; text-decoration: none; }
-  footer a:hover { text-decoration: underline; }
-  footer .footer-left { display: flex; flex-direction: column; gap: 4px; }
-  footer .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-  @media (prefers-color-scheme: dark) {
-    body { background: #0d1117; color: #e6edf3; }
-    .search-bar, .cmd-card { background: #161b22; border-color: #30363d; }
-    .cmd-card:hover { border-color: #58a6ff; }
-    .cmd-name { color: #58a6ff; }
-    .cmd-desc, .subtitle { color: #8b949e; }
-    .section-title { color: #8b949e; }
-    .search-bar input { color: #e6edf3; }
-    .search-bar input::placeholder { color: #484f58; }
-    footer { border-top-color: #30363d; }
-    footer a { color: #58a6ff; }
-  }
-</style>
+<link rel="stylesheet" href="assets/shared.css" />
 </head>
 <body>
 <div class="container">
@@ -51,8 +17,8 @@
   <div id="content"></div>
   <footer>
     <div class="footer-left">
-      <span>© 2026 <a href="https://github.com/MARCO.CHAN" target="_blank">MARCO.CHAN</a></span>
-      <span>最后更新：2026 年 7 月</span>
+      <span>© 2026 <a href="https://github.com/linuxhobby" target="_blank">LINUXHOBBY</a></span>
+      <span>最后更新：2026 年 11 月</span>
     </div>
     <div class="footer-right">
       <span><a href="https://github.com/linuxhobby/ProxmoxVEDocumentation" target="_blank">GitHub 仓库</a></span>
@@ -64,44 +30,89 @@
 const data = [
   { cat: "连接", items: [
     { cmd: "up",      desc: "连接到 Tailscale，如需时进行登录" },
+    { cmd: "up --qr", desc: "连接并显示登录二维码" },
+    { cmd: "up --ssh", desc: "启用 Tailscale SSH" },
+    { cmd: "up --accept-routes", desc: "接受其他节点广播的子网路由" },
+    { cmd: "up --advertise-exit-node", desc: "将本机声明为出口节点 (Exit Node)" },
+    { cmd: "up --advertise-routes <网段>", desc: "将本机声明为子网路由器" },
+    { cmd: "up --hostname <名称>", desc: "自定义本节点主机名" },
+    { cmd: "up --reset", desc: "恢复命令行未管理的设置为默认值" },
     { cmd: "down",    desc: "从 Tailscale 断开连接" },
     { cmd: "set",     desc: "更改指定的首选项" },
+    { cmd: "set --shields-up", desc: "开启护盾模式 (拒绝所有入站连接)" },
+    { cmd: "set --exit-node <节点>", desc: "使用指定的出口节点" },
+    { cmd: "set --exit-node-allow-lan-access", desc: "使用出口节点时保留局域网直接访问" },
     { cmd: "wait",    desc: "等待 Tailscale 资源变为可用" },
   ]},
   { cat: "账号", items: [
     { cmd: "login",   desc: "登录到 Tailscale 账户" },
+    { cmd: "login --follow", desc: "跟随其他节点的登录流程" },
     { cmd: "logout",  desc: "断开连接并使当前节点密钥失效" },
     { cmd: "switch",  desc: "切换到不同的 Tailscale 账户" },
+    { cmd: "switch --list", desc: "列出本机可切换的账户" },
   ]},
   { cat: "网络诊断", items: [
-    { cmd: "netcheck",  desc: "显示本地网络条件分析" },
-    { cmd: "ping",      desc: "在 Tailscale 层 ping 主机，查看路由情况" },
     { cmd: "status",    desc: "显示 tailscaled 及其连接的状态" },
+    { cmd: "status --json", desc: "以 JSON 格式输出完整状态" },
+    { cmd: "status --peers", desc: "只显示对等节点列表" },
+    { cmd: "status --yaml", desc: "以 YAML 格式输出状态" },
     { cmd: "ip",        desc: "显示 Tailscale IP 地址" },
-    { cmd: "whois",     desc: "获取与 Tailscale IP 关联的机器和用户信息" },
-    { cmd: "exit-node", desc: "获取 tailnet 中出口节点的信息" },
+    { cmd: "ip -4",     desc: "只显示 Tailscale IPv4 地址" },
+    { cmd: "ip -6",     desc: "只显示 Tailscale IPv6 地址" },
+    { cmd: "ping <主机>", desc: "在 Tailscale 层 ping 主机，查看路由情况" },
+    { cmd: "ping --c <次数> <主机>", desc: "指定 ping 次数" },
+    { cmd: "ping --until-direct <主机>", desc: "持续 ping 直到建立直连" },
+    { cmd: "netcheck",  desc: "显示本地网络条件分析" },
+    { cmd: "netcheck --verbose", desc: "输出详细的网络探测过程" },
+    { cmd: "whois <IP>", desc: "获取与 Tailscale IP 关联的机器和用户信息" },
+    { cmd: "exit-node list", desc: "列出 tailnet 中可用的出口节点" },
     { cmd: "appc-routes", desc: "打印应用连接器 (App Connector) 的路由状态" },
   ]},
   { cat: "连接工具", items: [
-    { cmd: "nc",      desc: "连接到主机上的端口，接入 stdin/stdout" },
-    { cmd: "ssh",     desc: "SSH 到 Tailscale 机器" },
-    { cmd: "file",    desc: "发送或接收文件 (Taildrop)" },
+    { cmd: "nc <主机> <端口>", desc: "连接到主机上的端口，接入 stdin/stdout" },
+    { cmd: "ssh <user@host>", desc: "SSH 到 Tailscale 机器" },
+    { cmd: "file cp <本地文件> <节点>:", desc: "通过 Taildrop 发送文件到节点" },
+    { cmd: "file get <目录>", desc: "接收收到的 Taildrop 文件" },
     { cmd: "drive",   desc: "使用 Taildrive 与 tailnet 共享目录" },
   ]},
   { cat: "对外服务", items: [
-    { cmd: "funnel",  desc: "在公网上暴露内容和本地服务器" },
     { cmd: "serve",   desc: "在 tailnet 内部提供内容和本地服务器" },
-    { cmd: "cert",    desc: "获取 TLS 证书" },
-    { cmd: "dns",     desc: "访问 Tailscale DNS 设置" },
+    { cmd: "serve status", desc: "查看当前 serve/funnel 配置" },
+    { cmd: "serve reset", desc: "清空所有 serve/funnel 配置" },
+    { cmd: "funnel",  desc: "在公网上暴露内容和本地服务器" },
+    { cmd: "funnel status", desc: "查看当前 funnel 配置" },
+    { cmd: "cert <域名>", desc: "获取 TLS 证书" },
+    { cmd: "cert <域名> --cert-file <f> --key-file <f>", desc: "获取证书并写入指定文件" },
+    { cmd: "dns status", desc: "查看 Tailscale DNS 状态" },
+    { cmd: "dns query <名称>", desc: "向 MagicDNS 查询域名解析" },
   ]},
   { cat: "系统管理", items: [
     { cmd: "configure", desc: "配置主机以启用更多 Tailscale 功能" },
+    { cmd: "configure kubeconfig", desc: "导出 kubeconfig 供 Kubernetes 使用 tailnet" },
+    { cmd: "configure synology", desc: "配置 Synology 设备的系统权限" },
     { cmd: "lock",      desc: "管理 tailnet 锁定" },
+    { cmd: "lock status", desc: "查看 tailnet 锁定状态" },
+    { cmd: "lock init", desc: "初始化 tailnet 锁定并生成签名密钥" },
+    { cmd: "lock add <密钥文件>", desc: "添加签名密钥" },
+    { cmd: "lock remove <密钥>", desc: "移除签名密钥" },
+    { cmd: "lock sign <节点密钥>", desc: "签名待批准的节点" },
+    { cmd: "lock disable", desc: "禁用 tailnet 锁定" },
     { cmd: "update",    desc: "将 Tailscale 更新到最新或指定版本" },
+    { cmd: "update --yes", desc: "跳过确认直接更新" },
+    { cmd: "update --track <stable|beta|unstable>", desc: "切换更新通道" },
     { cmd: "web",       desc: "运行用于控制 Tailscale 的 Web 服务器" },
     { cmd: "metrics",   desc: "暴露和收集 Tailscale 客户端指标" },
     { cmd: "syspolicy", desc: "列出、重新加载系统策略或检查错误" },
-    { cmd: "completion", desc: "为 Tailscale CLI 配置 Tab 自动补全" },
+    { cmd: "syspolicy reload", desc: "重新加载系统策略" },
+    { cmd: "completion <bash|zsh|fish>", desc: "输出对应 shell 的自动补全脚本" },
+  ]},
+  { cat: "调试 (debug)", items: [
+    { cmd: "debug peer-endpoints", desc: "显示与对等节点的连接端点详情" },
+    { cmd: "debug derp", desc: "列出 DERP 中继服务器" },
+    { cmd: "debug env", desc: "打印 tailscaled 运行环境信息" },
+    { cmd: "debug rebind", desc: "强制重新绑定网络连接" },
+    { cmd: "debug capture", desc: "抓取用于诊断的数据包" },
+    { cmd: "debug daemon-logs", desc: "实时查看 tailscaled 日志" },
   ]},
   { cat: "其他", items: [
     { cmd: "version",   desc: "显示 Tailscale 版本" },
@@ -110,28 +121,7 @@ const data = [
     { cmd: "systray",   desc: "运行 Linux 桌面客户端的系统托盘应用" },
   ]},
 ];
-
-function render(q) {
-  const container = document.getElementById('content');
-  q = (q || '').toLowerCase().trim();
-  let html = '';
-  let any = false;
-  data.forEach(section => {
-    const items = q ? section.items.filter(i => i.cmd.includes(q) || i.desc.toLowerCase().includes(q)) : section.items;
-    if (!items.length) return;
-    any = true;
-    html += `<div class="section"><div class="section-title">${section.cat}</div><div class="cmd-grid">`;
-    items.forEach(i => {
-      html += `<div class="cmd-card"><span class="cmd-name">${i.cmd}</span><span class="cmd-desc">${i.desc}</span></div>`;
-    });
-    html += `</div></div>`;
-  });
-  if (!any) html = `<div class="no-result">未找到匹配命令</div>`;
-  container.innerHTML = html;
-}
-
-function filter() { render(document.getElementById('search').value); }
-render('');
 </script>
+<script src="assets/shared.js"></script>
 </body>
 </html>
